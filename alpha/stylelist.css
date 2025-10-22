@@ -108,8 +108,13 @@ a {
         border: solid;
         border-color: var(--white);
         background-color: transparent;
+        color: var(--white);
         
       }
+    }
+
+    a {
+      color: var(--white);
     }
   }
 
@@ -133,8 +138,8 @@ a {
       border-radius: 10px;
       padding: 25px;
       border: solid;
-      border-color: var(--white);
-      background-color: transparent;
+      background-color: var(--white);
+
       
     }
   }
@@ -195,4 +200,23 @@ a {
     }
 
 } 
+}
+
+
+
+/* results page */
+.results {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 600px;
+  }
+
+  h2 {
+    color: var(--white);
+  }
+
 }
