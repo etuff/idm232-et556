@@ -72,8 +72,8 @@ a {
   }
 
   .welcome {
-    height: 800px;
-    background-image: url(resources/welcome/welcome2.jpg);
+    height: 500px;
+    background-image: url(resources/welcome/bg3.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     max-width: 100vw;
@@ -137,10 +137,30 @@ a {
       height: 40px;
       border-radius: 10px;
       padding: 25px;
-      border: solid;
       background-color: var(--white);
 
       
+    }
+
+    #searchbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      button {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        border: var(--black);
+        padding: 10px;
+        background-color: var(--orange);
+
+        img {
+          width: 20px;
+          justify-self: center;
+          align-self: center;
+        }
+      }
     }
   }
 
@@ -153,6 +173,8 @@ a {
 .ttitle {
   font-family: var(--cursive);
   color: var(--orange);
+  border-bottom: 2px solid var(--white);
+  margin-bottom: 30px;
 
 }
 
@@ -168,10 +190,9 @@ a {
     gap: 60px;
 
     .recipebox {
-       background-color: var(--white);
-      padding: 20px;
+      background-color: var(--white);
       justify-items: center;
-      width: fit-content;
+      width: 450px;
       border-radius: 25px;
       cursor: pointer;
       position: relative;
@@ -185,11 +206,15 @@ a {
       }
 
       img{
-      width: 400px;
+      width: 450px;
       height: auto;
-      border-radius: 15px;
+      border-top-left-radius: 25px;
       object-fit: cover;
       transition: filter 0.4s ease, transform 0.4s ease;
+    }
+
+    .recipetext {
+      padding: 25px;
     }
  
   }

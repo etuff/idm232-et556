@@ -15,6 +15,16 @@ html {
 
 }
 
+body {
+    p, li {
+      font-family: var(--textbody);
+      font-size: 16px;
+      line-height: 30px;
+      letter-spacing: 1px;
+      color: var(--white);
+    }
+}
+
 .recipebody {
     margin: 10px 0 30px 0;
     display: flex;
@@ -38,10 +48,12 @@ html {
         h1 {
             font-family: var(--texttitle);
             color: var(--orange);
+            margin-bottom: 0;
         }
 
         .sub {
             color: var(--black);
+            margin-top: 2px;
         }
     }
 
@@ -49,9 +61,33 @@ html {
         width: 100vw;
         height: auto;
         margin: 10px;
-        aspect-ratio: 16 / 6; 
+        aspect-ratio: 16 / 5; 
         object-fit: cover;
     }
+
+    .txt {
+        width: 1000px;
+        margin: 20px;
+        
+
+        .gry {
+            font-family: var(--cursive);
+            color: var(--gray);
+        }
+
+    }
+
+     .txtimg {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            img {
+                width: 400px;
+            }
+        }
+
+
 
 }
 
