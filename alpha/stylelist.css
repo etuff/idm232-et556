@@ -235,6 +235,7 @@ a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 60px;
 
   img {
     width: 600px;
