@@ -245,3 +245,27 @@ a {
   }
 
 }
+
+
+
+footer {
+    background-image: linear-gradient(var(--white), var(--gray));
+    color: var(--black);
+    padding: 50px 250px;
+    margin: 0;
+    justify-self: stretch;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+   
+      
+
+
+  h2 {
+    justify-self: center;
+    margin: 40px;
+  }
+
+
+}
