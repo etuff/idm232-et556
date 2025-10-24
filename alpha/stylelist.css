@@ -268,4 +268,171 @@ footer {
   }
 
 
+
+}
+
+/* -------------------- */
+/* 📱 Responsive Design */
+/* -------------------- */
+
+@media (max-width: 1370px) {
+
+  header {
+    padding: 0 30px;
+  }
+
+  #rightmenu {
+    gap: 20px;
+  }
+
+  #welcomecenter h1 {
+    font-size: 52px;
+  }
+
+  #welcomecenter input[type="text"] {
+    width: 450px;
+  }
+
+  .recipes {
+    margin: 40px 80px;
+  }
+
+  .recipes .recipegrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .recipes .recipegrid .recipebox {
+    width: 100%;
+    max-width: 400px;
+
+    img {
+      width: 400px;
+    }
+  }
+
+  footer {
+    padding: 50px 150px;
+  }
+}
+
+/* Tablet screens (768px and below) */
+@media (max-width: 1030px) {
+
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  #rightmenu {
+    width: 100%;
+    gap: 15px;
+    justify-content: flex-start;
+
+    input[type="text"] {
+      width: 100px;
+    }
+  }
+
+  #welcomecenter h1 {
+    font-size: 45px;
+    text-align: center;
+
+    
+  }
+
+  #welcomecenter input[type="text"] {
+    width: 400px;
+  }
+
+  .recipes {
+    margin: 40px;
+    /* padding: 0 40px; */
+  }
+
+  .recipes .recipegrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    justify-items: center;
+  }
+
+  .recipes .recipegrid .recipebox {
+    width: 100%;
+    max-width: 400px;
+
+    img {
+      width: 400px;
+    }
+  }
+
+  footer {
+    padding: 40px 80px;
+  }
+}
+
+/* Mobile screens (600px and below) */
+@media (max-width: 500px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  #rightmenu {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  #rightmenu input[type="text"] {
+    width: 90%;
+    height: 35px;
+  }
+
+  #welcomecenter {
+    padding: 20px;
+  }
+
+  #welcomecenter h1 {
+    font-size: 32px;
+  }
+
+  #welcomecenter input[type="text"] {
+    width: 100%;
+    height: 35px;
+    padding: 15px;
+  }
+
+  #welcomecenter #searchbar button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .recipes {
+    margin: 20px;
+  }
+
+  .recipes .recipegrid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .recipes .recipegrid .recipebox {
+    width: 100%;
+
+    img {
+      width: 400px;
+    }
+  }
+
+  .results img {
+    width: 90%;
+  }
+
+  footer {
+    padding: 30px 20px;
+    text-align: center;
+  }
 }
