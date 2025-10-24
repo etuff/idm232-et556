@@ -271,9 +271,7 @@ footer {
 
 }
 
-/* -------------------- */
-/* 📱 Responsive Design */
-/* -------------------- */
+/* media queries */
 
 @media (max-width: 1370px) {
 
@@ -316,7 +314,7 @@ footer {
   }
 }
 
-/* Tablet screens (768px and below) */
+/* Tablet screens */
 @media (max-width: 1030px) {
 
 
@@ -373,7 +371,7 @@ footer {
   }
 }
 
-/* Mobile screens (600px and below) */
+/* Mobile screens */
 @media (max-width: 500px) {
   header {
     flex-direction: column;

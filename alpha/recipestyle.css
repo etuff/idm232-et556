@@ -153,3 +153,120 @@ body {
 
 
 }
+
+
+/* 🖥️ Large screens */
+@media (max-width: 1370px) {
+  .recipebody .txt {
+    max-width: 800px;
+  }
+
+  .recipebody .steps {
+    max-width: 1000px;
+  }
+
+  .recipebody .txtimg img {
+    width: 350px;
+  }
+}
+
+/* 💻 Tablets */
+@media (max-width: 1024px) {
+  .recipebody {
+    padding: 0 40px;
+  }
+
+  .recipebody .txt {
+    max-width: 700px;
+  }
+
+  .recipebody .txtimg {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .recipebody .tools {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
+
+  .recipebody .tools img {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .recipebody .steps {
+    max-width: 800px;
+  }
+
+  .recipebody .stepsin {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .all {
+    padding: 10px;
+  }
+
+  .recipebody .enjoy img {
+    width: 300px;
+  }
+}
+
+/* 📱 Small screens */
+@media (max-width: 600px) {
+  .recipebody {
+    padding: 0 20px;
+  }
+
+  .recipebody .txt {
+    max-width: 100%;
+  }
+
+  .recipebody .mainimg {
+    aspect-ratio: 16 / 9;
+  }
+
+  .recipebody .txtimg img {
+    width: 100%;
+  }
+
+  .recipebody .tools {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .recipebody .tools img {
+    width: 100%;
+  }
+
+  .recipebody .steps {
+    max-width: 100%;
+  }
+
+  .recipebody .stepsin {
+    margin: 15px 0;
+
+    
+  }
+
+   .stepsin .all {
+    padding: 0;
+   }
+
+  
+
+  .recipebody .enjoy {
+    margin: 40px 0;
+  }
+
+  .recipebody .enjoy img {
+    width: 100%;
+  }
+
+  body p, body li {
+    font-size: 14px;
+    line-height: 26px;
+  }
+}
