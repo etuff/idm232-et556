@@ -52,6 +52,7 @@ a {
     /* padding: 0 250px 0 250px; */
     margin: 0;
     width: 100%;
+    min-height: 1000px;
     justify-self: center;
     background-image: linear-gradient(to right top, #33363b, #272c2f, #1e2223, #161918, #0c0d0c);
     background-repeat: no-repeat;
@@ -247,6 +248,11 @@ a {
 
 }
 
+
+/* help */
+.helpbody {
+  min-height: 700px;
+}
 
 
 footer {
