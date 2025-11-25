@@ -60,7 +60,7 @@ body {
     .mainimg {
         width: 100vw;
         height: auto;
-        margin: 10px;
+        margin: 0;
         aspect-ratio: 16 / 5; 
         object-fit: cover;
     }
@@ -188,7 +188,7 @@ body {
     }
 
     .textcenter {
-      max-width: 900px;
+      max-width: 100vw;
       width: 100%;
       
       h1 {
@@ -198,6 +198,10 @@ body {
       .sub {
         font-size: 18px;
       }
+    }
+
+    .mainimg {
+      margin: 0;
     }
 
     .enjoy img {
@@ -227,7 +231,7 @@ body {
     }
 
     .textcenter {
-      max-width: 700px;
+      max-width: 100vw;
       width: 100%;
       
       h1 {
@@ -237,6 +241,10 @@ body {
       .sub {
         font-size: 16px;
       }
+    }
+
+    .mainimg {
+      margin: 0;
     }
 
     .txtimg {
@@ -285,7 +293,12 @@ body {
 /* Small Tablets */
 @media (max-width: 770px) {
   .recipebody {
+    width: 100%;
     padding: 0 30px;
+
+    .cookingbody {
+      width: 100vw;
+    }
 
     .txt {
       max-width: 600px;
@@ -298,12 +311,12 @@ body {
     }
 
     .all {
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
     }
 
     .textcenter {
-      max-width: 600px;
+      max-width: 100vw;
       width: 100%;
       
       h1 {
@@ -313,6 +326,10 @@ body {
       .sub {
         font-size: 15px;
       }
+    }
+
+    .mainimg {
+      margin: 0;
     }
 
     .tools {
@@ -338,9 +355,14 @@ body {
 }
 
 /* Mobile screens */
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .recipebody {
+    margin-top: 0;
     padding: 0 20px;
+
+    .cookingbody {
+      margin-top: 40px;
+    }
 
     .txt {
       max-width: 100%;
@@ -356,6 +378,9 @@ body {
     .all {
       max-width: 100%;
       width: 100%;
+      padding: 2px;
+      border-radius: 10px;
+      background-color: transparent;
     }
 
     .textcenter {
@@ -373,7 +398,7 @@ body {
 
     .mainimg {
       aspect-ratio: 16 / 9;
-      margin: 5px 0;
+      margin: 0;
     }
 
     .txtimg {
@@ -411,10 +436,7 @@ body {
       }
     }
 
-    .all {
-      padding: 20px;
-      border-radius: 15px;
-    }
+   
   }
 
   body p, body li {
@@ -451,7 +473,7 @@ body {
     }
 
     .all {
-      padding: 15px;
+      padding: 10px;
     }
   }
 
