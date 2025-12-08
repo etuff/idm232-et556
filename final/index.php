@@ -5,6 +5,34 @@ $pageTitle = 'Home';
 require __DIR__ . '/partials/header.php';
 
 $conn = getDBConnection();
+
+// Function to get correct image path
+function getCorrectImagePath($path) {
+    // Trim any whitespace
+    $path = trim($path);
+    
+    // If path already has http:// or https://, return as is
+    if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
+        return $path;
+    }
+    
+    // If path starts with 'recipes/', add leading slash
+    if (strpos($path, 'recipes/') === 0) {
+        return '/' . $path;
+    }
+    
+    // If path doesn't start with /, add it
+    if (!empty($path) && strpos($path, '/') !== 0) {
+        return '/' . $path;
+    }
+    
+    // Default fallback
+    if (empty($path)) {
+        return '/resources/default.jpg';
+    }
+    
+    return $path;
+}
 ?>
 
 <div class="recipes">
@@ -20,8 +48,12 @@ $conn = getDBConnection();
         if ($res->num_rows > 0) {
             while($row = $res->fetch_assoc()): 
                 $images = explode(',', $row['images']);
-                // FIX: Add leading slash to image paths
-                $image = !empty($images[0]) ? '/' . ltrim($images[0], '/') : '/resources/default.jpg';
+                // Get the first image or default
+                $firstImage = !empty($images[0]) ? trim($images[0]) : 'resources/default.jpg';
+                $image = getCorrectImagePath($firstImage);
+                
+                // DEBUG: Show the actual path being used
+                // echo "<!-- DEBUG: Image path for '{$row['name']}': $image -->";
         ?>
         <div class="recipebox">
             <a href="recipe.php?id=<?= $row['id'] ?>">
@@ -50,6 +82,4 @@ $conn = getDBConnection();
     </div>
 </div>
 
-<?php require __DIR__ . '/partials/footer.php'; 
-
-?>
+<?php require __DIR__ . '/partials/footer.php'; ?>
