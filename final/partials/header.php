@@ -1,25 +1,69 @@
-<?php
-// partials/header.php
-?><!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title><?= htmlspecialchars($pageTitle ?? 'ReCipe') ?></title>
-  <link rel="stylesheet" href="/stylelist.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe - <?= htmlspecialchars($pageTitle ?? 'Home') ?></title>
+    <link rel="stylesheet" href="stylelist.css">
+    
+    <?php if (isset($hideWelcome) && $hideWelcome === true): ?>
+        <!-- Load recipe styles only on recipe pages -->
+        <link rel="stylesheet" href="recipestyle.css">
+    <?php endif; ?>
 </head>
 <body>
-<header>
-  <div class="toprow">
-    <h1 class="cursive"><a href="/index.php">ReCipe</a></h1>
-    <button id="menuBtn" aria-label="menu">☰</button>
-  </div>
-  <nav id="rightmenu">
-    <a href="/help.php">Help</a>
-    <form action="/search.php" method="get" class="searchbar">
-      <input name="q" type="search" placeholder="Search..." aria-label="Search" required />
-      <button type="submit">🔍</button>
-    </form>
-  </nav>
+
+<?php if (!isset($hideWelcome) || $hideWelcome !== true): ?>
+<div class="welcome">
+    <header>
+        <div class="toprow">
+            <h1 class="cursive"><a href="index.php">ReCipe</a></h1>
+            <ion-icon name="menu-outline" id="menuBtn"></ion-icon>
+        </div>
+
+        <div id="rightmenu">
+            <h2><a href="help.html">Help</a></h2>
+            <form action="search.php" method="GET" class="searchbar">
+                <input type="text" name="q" placeholder="Search..." 
+                       value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+                <button type="submit">
+                    <img src="resources/welcome/search.png" alt="search button">
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <div id="welcomecenter">
+        <div class="welcometxt">
+            <h1 class="cursive">ReCipe</h1>
+            <form action="search.php" method="GET" class="searchbar">
+                <input type="text" name="q" placeholder="Search..." 
+                       value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+                <button type="submit">
+                    <img src="resources/welcome/search.png" alt="search button">
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+<?php else: ?>
+<!-- Simplified header for recipe pages -->
+<header class="recipe-header">
+    <div class="toprow">
+        <h1 class="cursive"><a href="index.php">ReCipe</a></h1>
+        <ion-icon name="menu-outline" id="menuBtn"></ion-icon>
+    </div>
+
+    <div id="rightmenu">
+        <h2><a href="help.html">Help</a></h2>
+        <form action="search.php" method="GET" class="searchbar">
+            <input type="text" name="q" placeholder="Search..." 
+                   value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+            <button type="submit">
+                <img src="resources/welcome/search.png" alt="search button">
+            </button>
+        </form>
+    </div>
 </header>
-<main>
+<?php endif; ?>

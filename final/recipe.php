@@ -1,91 +1,203 @@
 <?php
-// recipe.php
-require 'db.php';
+require_once 'db.php';
 
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($id <= 0) {
+// Get recipe ID from URL
+$recipe_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+if ($recipe_id <= 0) {
+    // Redirect to homepage if no valid ID
     header('Location: index.php');
-    exit;
+    exit();
 }
 
-$stmt = $pdo->prepare("SELECT * FROM recipes WHERE id = :id");
-$stmt->execute([':id' => $id]);
-$r = $stmt->fetch();
+// Connect to database
+$conn = getDBConnection();
 
-if (!$r) {
-    http_response_code(404);
-    echo "Recipe not found.";
-    exit;
+// Fetch recipe details
+$stmt = $conn->prepare("SELECT * FROM recipes WHERE id = ?");
+$stmt->bind_param("i", $recipe_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$recipe = $result->fetch_assoc();
+
+if (!$recipe) {
+    // Recipe not found
+    header('Location: index.php');
+    exit();
 }
 
-// parse images
-$images = [];
-if (!empty($r['images'])) {
-    $s = $r['images'];
-    if (strpos($s, '[') === 0) {
-        $s2 = trim($s, "[] \t\n\r\0\x0B'\"");
-        $parts = preg_split("/[,;]/", $s2);
-        foreach ($parts as $p) {
-            $p = trim($p, " '\"");
-            if ($p) $images[] = $p;
-        }
-    } else {
-        foreach (preg_split("/[,;]/", $s) as $p) {
-            $p = trim($p, " '\"");
-            if ($p) $images[] = $p;
-        }
-    }
+$pageTitle = htmlspecialchars($recipe['name']);
+$hideWelcome = true; // Hide welcome section on recipe pages
+
+// Include header
+require __DIR__ . '/partials/header.php';
+
+// Parse data from text fields
+$ingredients = !empty($recipe['ingredients']) ? parseTextToArray($recipe['ingredients']) : [];
+$tools = !empty($recipe['tools']) ? parseTools($recipe['tools']) : [];
+$steps = !empty($recipe['steps']) ? parseSteps($recipe['steps']) : [];
+
+// FIX: Add leading slash to all image paths
+$images = !empty($recipe['images']) ? explode(',', $recipe['images']) : ['/resources/default.jpg'];
+foreach ($images as &$img) {
+    $img = '/' . ltrim(trim($img), '/');
 }
-if (empty($images)) $images[] = 'resources/welcome/default.jpg';
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title><?php echo htmlspecialchars($r['name']); ?> — ReCipe</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="stylelist.css">
-</head>
-<body>
-    <div class="results">
-        <a href="index.php" style="color:var(--white); text-decoration:underline; margin-bottom:20px; display:inline-block;">← Back to recipes</a>
-        <h1 style="color:var(--orange);"><?php echo htmlspecialchars($r['name']); ?></h1>
-        <h3 style="color:var(--white)"><?php echo htmlspecialchars($r['subtitle']); ?></h3>
 
-        <?php foreach ($images as $img): ?>
-            <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($r['name']); ?>" style="max-width:90%; margin:10px 0;">
-        <?php endforeach; ?>
+<div class="recipebody">
+    <div class="cookingbody">
+        <div class="textcenter">
+            <h1><?= htmlspecialchars($recipe['name']) ?></h1>
+            <p class="sub"><?= htmlspecialchars($recipe['subtitle']) ?></p>
+        </div>
 
-        <?php if (!empty($r['description'])): ?>
-            <section style="max-width:900px; margin:20px auto; color:var(--white);">
-                <h2>Description</h2>
-                <p><?php echo nl2br(htmlspecialchars($r['description'])); ?></p>
-            </section>
-        <?php endif; ?>
-
-        <?php if (!empty($r['ingredients'])): ?>
-            <section style="max-width:900px; margin:20px auto; color:var(--white);">
-                <h2>Ingredients</h2>
-                <pre style="white-space:pre-wrap; background:transparent; color:var(--white); border:none; padding:0;"><?php echo htmlspecialchars($r['ingredients']); ?></pre>
-            </section>
-        <?php endif; ?>
-
-        <?php if (!empty($r['steps'])): ?>
-            <section style="max-width:900px; margin:20px auto; color:var(--white);">
-                <h2>Steps</h2>
-                <pre style="white-space:pre-wrap; background:transparent; color:var(--white); border:none; padding:0;"><?php echo htmlspecialchars($r['steps']); ?></pre>
-            </section>
-        <?php endif; ?>
-
+        <img class="mainimg" src="<?= htmlspecialchars($images[0]) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
     </div>
 
-    <footer>
-        <hr>
-        <h2 class="graytext">Enoch Tuffour </h2>
-        <h2 class="graytext">&copy; <?php echo date('Y'); ?></h2>
-    </footer>
+    <?php if (!empty($recipe['description'])): ?>
+    <div class="txt">
+        <p class="gry">Description</p>
+        <p><?= nl2br(htmlspecialchars($recipe['description'])) ?></p>
+    </div>
+    <?php endif; ?>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-</html>
+    <?php if (!empty($ingredients)): ?>
+    <div class="txt">
+        <p class="gry">Ingredients</p>
+        <div class="txtimg">
+            <ul>
+                <?php foreach ($ingredients as $ingredient): ?>
+                <li><?= htmlspecialchars($ingredient) ?></li>
+                <?php endforeach; ?>
+            </ul>
+            <?php if (isset($images[1])): ?>
+            <img src="<?= htmlspecialchars($images[1]) ?>" alt="Ingredients">
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($tools)): ?>
+    <div class="txt">
+        <p class="gry">Tools</p>
+        <?php foreach ($tools as $tool): ?>
+        <div class="tools">
+            <div class="toolsinfo">
+                <h3><?= htmlspecialchars($tool['name']) ?></h3>
+                <p><?= nl2br(htmlspecialchars($tool['description'])) ?></p>
+            </div>
+            <?php if (!empty($tool['image'])): ?>
+            <img src="<?= htmlspecialchars($tool['image']) ?>" alt="<?= htmlspecialchars($tool['name']) ?>">
+            <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($steps)): ?>
+    <div class="steps">
+        <div class="txt"><p class="gry">Steps</p></div>
+        <div class="all">
+            <?php 
+            $step_counter = 1;
+            foreach ($steps as $step): 
+            ?>
+            <div class="stepsin">
+                <h1 class="stepnumb">Step <?= $step_counter ?></h1>
+                <div class="tools">
+                    <div class="toolsinfo">
+                        <?php if (!empty($step['title'])): ?>
+                        <h3><?= htmlspecialchars($step['title']) ?></h3>
+                        <?php endif; ?>
+                        <p><?= nl2br(htmlspecialchars($step['description'])) ?></p>
+                    </div>
+                    <?php if (!empty($step['image'])): ?>
+                    <img src="<?= htmlspecialchars($step['image']) ?>" alt="Step <?= $step_counter ?>">
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php 
+                $step_counter++;
+            endforeach; 
+            ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <div class="enjoy">
+        <img src="<?= htmlspecialchars($images[0]) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
+        <h2>Enjoy!</h2>
+    </div>
+</div>
+
+<?php
+// Include footer
+require __DIR__ . '/partials/footer.php';
+
+// Close database connection
+$stmt->close();
+$conn->close();
+
+// HELPER FUNCTIONS with image path fixes
+function parseTextToArray($text) {
+    // Split by new lines and remove empty lines
+    $lines = explode("\n", $text);
+    $result = [];
+    
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+        if (!empty($trimmed)) {
+            $result[] = $trimmed;
+        }
+    }
+    
+    return $result;
+}
+
+function parseTools($toolsText) {
+    // Format: TOOL_NAME|TOOL_DESCRIPTION|TOOL_IMAGE
+    $lines = explode("\n", $toolsText);
+    $tools = [];
+    
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+        if (!empty($trimmed)) {
+            $parts = explode('|', $trimmed);
+            if (count($parts) >= 2) {
+                $tool = [
+                    'name' => $parts[0],
+                    'description' => $parts[1],
+                    'image' => !empty($parts[2]) ? '/' . ltrim(trim($parts[2]), '/') : ''
+                ];
+                $tools[] = $tool;
+            }
+        }
+    }
+    
+    return $tools;
+}
+
+function parseSteps($stepsText) {
+    // Format: STEP_TITLE|STEP_DESCRIPTION|STEP_IMAGE
+    // Title can be empty
+    $lines = explode("\n", $stepsText);
+    $steps = [];
+    
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+        if (!empty($trimmed)) {
+            $parts = explode('|', $trimmed);
+            if (count($parts) >= 2) {
+                $step = [
+                    'title' => $parts[0] ?? '',
+                    'description' => $parts[1],
+                    'image' => !empty($parts[2]) ? '/' . ltrim(trim($parts[2]), '/') : ''
+                ];
+                $steps[] = $step;
+            }
+        }
+    }
+    
+    return $steps;
+}
+?>

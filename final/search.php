@@ -1,17 +1,80 @@
 <?php
 require_once 'db.php';
-$q = trim($_GET['q'] ?? '');
-if ($q === '') header('Location: index.php');
 
-$like = '%' . $q . '%';
-$stmt = $conn->prepare("SELECT id FROM recipes WHERE name LIKE ? OR description LIKE ? OR ingredients LIKE ? OR tools LIKE ?");
-$stmt->bind_param('ssss', $like, $like, $like, $like);
-$stmt->execute();
-$res = $stmt->get_result();
+$searchTerm = $_GET['q'] ?? '';
+$pageTitle = 'Search Results';
 
-if ($res->num_rows === 0) {
-    header('Location: results.html');
-    exit;
-}
-header('Location: recipes.php?q=' . urlencode($q));
-exit;
+// Include header
+require __DIR__ . '/partials/header.php';
+
+// Database connection
+$conn = getDBConnection();
+?>
+
+<div class="recipes">
+    <h1 class="ttitle">
+        <?= !empty($searchTerm) 
+            ? "Search Results for: " . htmlspecialchars($searchTerm) 
+            : "Search Recipes" ?>
+    </h1>
+
+    <div class="recipegrid">
+        <?php 
+        if (!empty($searchTerm)) {
+            // Fetch search results - only searching name and subtitle columns
+            $stmt = $conn->prepare("
+                SELECT id, name, subtitle, images 
+                FROM recipes 
+                WHERE name LIKE ? OR subtitle LIKE ?
+                ORDER BY id DESC
+            ");
+            $searchPattern = "%" . $searchTerm . "%";
+            $stmt->bind_param("ss", $searchPattern, $searchPattern);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            
+            if ($res->num_rows > 0) {
+                while($row = $res->fetch_assoc()): 
+                    $images = explode(',', $row['images']);
+                    $image = !empty($images[0]) ? $images[0] : 'resources/default.jpg';
+        ?>
+        <div class="recipebox">
+            <a href="recipe.php?id=<?= $row['id'] ?>">
+                <img src="<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
+                <div class="recipetext">
+                    <h2><?= htmlspecialchars($row['name']) ?></h2>
+                    <p><?= htmlspecialchars($row['subtitle']) ?></p>
+                </div>
+            </a>
+        </div>
+        <?php 
+                endwhile;
+            } else {
+                // No results found
+        ?>
+        <div class="no-results-container">
+            <img src="resources/nosearch.png" alt="No results found" class="no-results-image">
+            <p class="no-results-message">No recipes found for "<?= htmlspecialchars($searchTerm) ?>". Try a different search term.</p>
+        </div>
+        <?php
+            }
+            $stmt->close();
+        } else {
+            // No search term provided
+        ?>
+        <div class="no-results-container">
+            <img src="resources/nosearch.png" alt="Enter search term" class="no-results-image">
+            <p class="no-results-message">Please enter a search term to find recipes.</p>
+        </div>
+        <?php
+        }
+        
+        $conn->close();
+        ?>
+    </div>
+</div>
+
+<?php
+// Include footer
+require __DIR__ . '/partials/footer.php';
+?>

@@ -153,6 +153,30 @@ a {
     
   }
 
+
+  /* No Results Styling */
+.no-results-container {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.no-results-image {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+.no-results-message {
+    font-size: 1.2rem;
+    color: #666;
+    font-weight: 500;
+}
+
   .searchbar {
       display: flex;
       align-items: center;
