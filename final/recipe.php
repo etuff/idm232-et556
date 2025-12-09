@@ -6,6 +6,11 @@ function getCorrectImagePath($path) {
     // Trim any whitespace
     $path = trim($path);
     
+    // If path is empty, return empty
+    if (empty($path)) {
+        return '';
+    }
+    
     // If path already has http:// or https://, return as is
     if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
         return $path;
@@ -17,13 +22,8 @@ function getCorrectImagePath($path) {
     }
     
     // If path doesn't start with /, add it
-    if (!empty($path) && strpos($path, '/') !== 0) {
+    if (strpos($path, '/') !== 0) {
         return '/' . $path;
-    }
-    
-    // Default fallback or empty for optional images
-    if (empty($path)) {
-        return '';
     }
     
     return $path;
@@ -60,21 +60,19 @@ $hideWelcome = true; // Hide welcome section on recipe pages
 // Include header
 require __DIR__ . '/partials/header.php';
 
-// Parse data from text fields
-$ingredients = !empty($recipe['ingredients']) ? parseTextToArray($recipe['ingredients']) : [];
+// Parse data from text fields - FIXED: Database uses asterisks (*) not newlines
+$ingredients = !empty($recipe['ingredients']) ? parseIngredients($recipe['ingredients']) : [];
 
-// Parse tools - using both tools and tool_description fields
-$tools = [];
-if (!empty($recipe['tools'])) {
-    $tools = parseTools($recipe['tools'], $recipe['tool_description'] ?? '');
-}
+// Parse tools - FIXED: Database stores tool name in 'tools' and description in 'tool_description'
+$tools = !empty($recipe['tools']) ? parseTools($recipe['tools'], $recipe['tool_description'] ?? '') : [];
 
-// Parse steps - database uses asterisks to separate steps
+// Parse steps - FIXED: Database uses asterisks (*) to separate steps
 $steps = !empty($recipe['steps']) ? parseSteps($recipe['steps']) : [];
 
-// Process images from database
+// Process images from database - FIXED: Database uses asterisks (*) not commas
 $rawImages = !empty($recipe['images']) ? explode('*', $recipe['images']) : [];
 $images = [];
+
 foreach ($rawImages as $img) {
     $correctedPath = getCorrectImagePath($img);
     if (!empty($correctedPath)) {
@@ -82,25 +80,35 @@ foreach ($rawImages as $img) {
     }
 }
 
+// Debug: Check what we got
+error_log("Recipe ID: " . $recipe_id);
+error_log("Raw images string: " . $recipe['images']);
+error_log("Processed images count: " . count($images));
+foreach ($images as $i => $img) {
+    error_log("Image $i: " . $img);
+}
+
 // If no valid images, use default
 if (empty($images)) {
     $images = ['/resources/default.jpg'];
 }
 
-// DEBUG: Show what we're working with
-// echo "<!-- DEBUG: Raw images from DB: " . htmlspecialchars($recipe['images']) . " -->";
-// echo "<!-- DEBUG: Processed images: " . implode(', ', $images) . " -->";
+// Assign specific images for different sections
+$mainImage = $images[0] ?? '';
+$ingredientsImage = $images[1] ?? '';
+// Tool image is typically at index 2
+// Step images start at index 3 and go sequentially
 ?>
 
 <div class="recipebody">
     <div class="cookingbody">
         <div class="textcenter">
             <h1><?= htmlspecialchars($recipe['name']) ?></h1>
-            <p class="sub"><?= htmlspecialchars($recipe['subtitle']) ?></p>
+            <p class="sub"><?= htmlspecialchars($recipe['subtitle'] ?? '') ?></p>
         </div>
 
-        <?php if (!empty($images[0])): ?>
-        <img class="mainimg" src="<?= htmlspecialchars($images[0]) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
+        <?php if (!empty($mainImage)): ?>
+        <img class="mainimg" src="<?= htmlspecialchars($mainImage) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
         <?php endif; ?>
     </div>
 
@@ -120,8 +128,8 @@ if (empty($images)) {
                 <li><?= htmlspecialchars($ingredient) ?></li>
                 <?php endforeach; ?>
             </ul>
-            <?php if (isset($images[1])): ?>
-            <img src="<?= htmlspecialchars($images[1]) ?>" alt="Ingredients">
+            <?php if (!empty($ingredientsImage)): ?>
+            <img src="<?= htmlspecialchars($ingredientsImage) ?>" alt="Ingredients">
             <?php endif; ?>
         </div>
     </div>
@@ -130,14 +138,19 @@ if (empty($images)) {
     <?php if (!empty($tools)): ?>
     <div class="txt">
         <p class="gry">Tools</p>
-        <?php foreach ($tools as $tool): ?>
+        <?php 
+        // Tool image is typically at index 2 in the images array
+        $toolImageIndex = 2;
+        $toolImage = $images[$toolImageIndex] ?? '';
+        foreach ($tools as $tool): 
+        ?>
         <div class="tools">
             <div class="toolsinfo">
                 <h3><?= htmlspecialchars($tool['name']) ?></h3>
                 <p><?= nl2br(htmlspecialchars($tool['description'])) ?></p>
             </div>
-            <?php if (!empty($tool['image'])): ?>
-            <img src="<?= htmlspecialchars($tool['image']) ?>" alt="<?= htmlspecialchars($tool['name']) ?>">
+            <?php if (!empty($toolImage)): ?>
+            <img src="<?= htmlspecialchars($toolImage) ?>" alt="<?= htmlspecialchars($tool['name']) ?>">
             <?php endif; ?>
         </div>
         <?php endforeach; ?>
@@ -150,7 +163,12 @@ if (empty($images)) {
         <div class="all">
             <?php 
             $step_counter = 1;
+            // Step images start at index 3
+            $stepImageStartIndex = 3;
+            
             foreach ($steps as $step): 
+                $stepImageIndex = $stepImageStartIndex + ($step_counter - 1);
+                $stepImage = $images[$stepImageIndex] ?? '';
             ?>
             <div class="stepsin">
                 <h1 class="stepnumb">Step <?= $step_counter ?></h1>
@@ -161,8 +179,8 @@ if (empty($images)) {
                         <?php endif; ?>
                         <p><?= nl2br(htmlspecialchars($step['description'])) ?></p>
                     </div>
-                    <?php if (!empty($step['image'])): ?>
-                    <img src="<?= htmlspecialchars($step['image']) ?>" alt="Step <?= $step_counter ?>">
+                    <?php if (!empty($stepImage)): ?>
+                    <img src="<?= htmlspecialchars($stepImage) ?>" alt="Step <?= $step_counter ?>">
                     <?php endif; ?>
                 </div>
             </div>
@@ -174,9 +192,9 @@ if (empty($images)) {
     </div>
     <?php endif; ?>
 
-    <?php if (!empty($images[0])): ?>
+    <?php if (!empty($mainImage)): ?>
     <div class="enjoy">
-        <img src="<?= htmlspecialchars($images[0]) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
+        <img src="<?= htmlspecialchars($mainImage) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
         <h2>Enjoy!</h2>
     </div>
     <?php endif; ?>
@@ -191,13 +209,14 @@ $stmt->close();
 $conn->close();
 
 // HELPER FUNCTIONS
-function parseTextToArray($text) {
-    // Split by asterisk (database format) and remove empty lines
-    $lines = explode('*', $text);
+
+function parseIngredients($text) {
+    // Database uses asterisks (*) to separate ingredients
+    $items = explode('*', $text);
     $result = [];
     
-    foreach ($lines as $line) {
-        $trimmed = trim($line);
+    foreach ($items as $item) {
+        $trimmed = trim($item);
         if (!empty($trimmed)) {
             $result[] = $trimmed;
         }
@@ -207,20 +226,17 @@ function parseTextToArray($text) {
 }
 
 function parseTools($toolsText, $toolDescription = '') {
-    // Tools are stored simply in the database
-    // Some recipes might have multiple tools separated by asterisk
-    $tools = [];
     
-    // Split by asterisk if multiple tools exist
     $toolNames = explode('*', $toolsText);
+    $tools = [];
     
     foreach ($toolNames as $toolName) {
         $trimmed = trim($toolName);
         if (!empty($trimmed)) {
             $tool = [
                 'name' => $trimmed,
-                'description' => $toolDescription, // Use the separate tool_description field
-                'image' => '' // Tool images are in the images field, not with tool data
+                'description' => $toolDescription,
+                'image' => '' 
             ];
             $tools[] = $tool;
         }
@@ -230,19 +246,27 @@ function parseTools($toolsText, $toolDescription = '') {
 }
 
 function parseSteps($stepsText) {
-    // Database uses asterisks to separate steps
-    $steps = [];
     
-    // Split steps by asterisk
     $stepItems = explode('*', $stepsText);
+    $steps = [];
     
     foreach ($stepItems as $stepItem) {
         $trimmed = trim($stepItem);
         if (!empty($trimmed)) {
+            
+            $title = '';
+            $description = $trimmed;
+            
+            
+            if (preg_match('/^Step\s+\d+:\s*(.+)/i', $trimmed, $matches)) {
+                $title = 'Step ' . (count($steps) + 1);
+                $description = $matches[1];
+            }
+            
             $step = [
-                'title' => '', // Steps don't have separate titles in database
-                'description' => $trimmed,
-                'image' => '' // Step images are in the images field
+                'title' => $title,
+                'description' => $description,
+                'image' => '' 
             ];
             $steps[] = $step;
         }

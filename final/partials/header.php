@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="stylelist.css">
     
     <?php if (isset($hideWelcome) && $hideWelcome === true): ?>
-        <!-- Load recipe styles only on recipe pages -->
+        
         <link rel="stylesheet" href="recipestyle.css">
     <?php endif; ?>
 </head>
@@ -48,7 +48,7 @@
 </div>
 <br>
 <?php else: ?>
-<!-- Simplified header for recipe pages -->
+
 <header class="recipe-header">
     <div class="toprow">
         <h1 class="cursive"><a href="index.php">ReCipe</a></h1>
