@@ -208,6 +208,11 @@
     }
 
 
+    #casebody .casetext video  {
+        width: 100%;
+    }
+
+
   }
 
 
@@ -310,11 +315,15 @@
   }
 
   #casebody {
-    margin: 20px 10px;
+    margin: 20px 0;
 
     #title {
       justify-self: center;
     }
+  }
+
+  #casebody .casetext video  {
+    width: 100%;
   }
 
   #casebody img, 
