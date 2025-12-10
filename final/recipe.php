@@ -1,39 +1,27 @@
 <?php
 require_once 'db.php';
 
-// Function to get correct image path
+
 function getCorrectImagePath($path) {
-    // Trim any whitespace
     $path = trim($path);
     
-    // If path is empty, return empty
     if (empty($path)) {
-        return '';
+        return 'resources/default.jpg';
     }
     
-    // If path already has http:// or https://, return as is
+
     if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
         return $path;
     }
     
-    // If path starts with 'recipes/', add leading slash
-    if (strpos($path, 'recipes/') === 0) {
-        return '/' . $path;
-    }
-    
-    // If path doesn't start with /, add it
-    if (strpos($path, '/') !== 0) {
-        return '/' . $path;
-    }
-    
-    return $path;
+
+    return ltrim($path, '/');
 }
 
-// Get recipe ID from URL
+
 $recipe_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($recipe_id <= 0) {
-    // Redirect to homepage if no valid ID
     header('Location: index.php');
     exit();
 }
@@ -49,27 +37,26 @@ $result = $stmt->get_result();
 $recipe = $result->fetch_assoc();
 
 if (!$recipe) {
-    // Recipe not found
     header('Location: index.php');
     exit();
 }
 
 $pageTitle = htmlspecialchars($recipe['name']);
-$hideWelcome = true; // Hide welcome section on recipe pages
+$hideWelcome = true;
 
 // Include header
 require __DIR__ . '/partials/header.php';
 
-// Parse data from text fields - FIXED: Database uses asterisks (*) not newlines
+// Parse data from text fields
 $ingredients = !empty($recipe['ingredients']) ? parseIngredients($recipe['ingredients']) : [];
 
-// Parse tools - FIXED: Database stores tool name in 'tools' and description in 'tool_description'
+// Parse tools
 $tools = !empty($recipe['tools']) ? parseTools($recipe['tools'], $recipe['tool_description'] ?? '') : [];
 
-// Parse steps - FIXED: Database uses asterisks (*) to separate steps
+// Parse steps
 $steps = !empty($recipe['steps']) ? parseSteps($recipe['steps']) : [];
 
-// Process images from database - FIXED: Database uses asterisks (*) not commas
+// Process images from database
 $rawImages = !empty($recipe['images']) ? explode('*', $recipe['images']) : [];
 $images = [];
 
@@ -82,22 +69,16 @@ foreach ($rawImages as $img) {
 
 // Debug: Check what we got
 error_log("Recipe ID: " . $recipe_id);
-error_log("Raw images string: " . $recipe['images']);
 error_log("Processed images count: " . count($images));
-foreach ($images as $i => $img) {
-    error_log("Image $i: " . $img);
-}
 
 // If no valid images, use default
 if (empty($images)) {
-    $images = ['/resources/default.jpg'];
+    $images = [getCorrectImagePath('resources/default.jpg')];
 }
 
 // Assign specific images for different sections
-$mainImage = $images[0] ?? '';
+$mainImage = $images[0] ?? getCorrectImagePath('resources/default.jpg');
 $ingredientsImage = $images[1] ?? '';
-// Tool image is typically at index 2
-// Step images start at index 3 and go sequentially
 ?>
 
 <div class="recipebody">
@@ -107,9 +88,9 @@ $ingredientsImage = $images[1] ?? '';
             <p class="sub"><?= htmlspecialchars($recipe['subtitle'] ?? '') ?></p>
         </div>
 
-        <?php if (!empty($mainImage)): ?>
-        <img class="mainimg" src="<?= htmlspecialchars($mainImage) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
-        <?php endif; ?>
+        <img class="mainimg" src="<?= htmlspecialchars($mainImage) ?>" 
+             alt="<?= htmlspecialchars($recipe['name']) ?>"
+             onerror="this.onerror=null; this.src='<?= getCorrectImagePath('resources/default.jpg') ?>';">
     </div>
 
     <?php if (!empty($recipe['description'])): ?>
@@ -129,7 +110,8 @@ $ingredientsImage = $images[1] ?? '';
                 <?php endforeach; ?>
             </ul>
             <?php if (!empty($ingredientsImage)): ?>
-            <img src="<?= htmlspecialchars($ingredientsImage) ?>" alt="Ingredients">
+            <img src="<?= htmlspecialchars($ingredientsImage) ?>" alt="Ingredients"
+                 onerror="this.style.display='none';">
             <?php endif; ?>
         </div>
     </div>
@@ -139,7 +121,6 @@ $ingredientsImage = $images[1] ?? '';
     <div class="txt">
         <p class="gry">Tools</p>
         <?php 
-        // Tool image is typically at index 2 in the images array
         $toolImageIndex = 2;
         $toolImage = $images[$toolImageIndex] ?? '';
         foreach ($tools as $tool): 
@@ -150,7 +131,8 @@ $ingredientsImage = $images[1] ?? '';
                 <p><?= nl2br(htmlspecialchars($tool['description'])) ?></p>
             </div>
             <?php if (!empty($toolImage)): ?>
-            <img src="<?= htmlspecialchars($toolImage) ?>" alt="<?= htmlspecialchars($tool['name']) ?>">
+            <img src="<?= htmlspecialchars($toolImage) ?>" alt="<?= htmlspecialchars($tool['name']) ?>"
+                 onerror="this.style.display='none';">
             <?php endif; ?>
         </div>
         <?php endforeach; ?>
@@ -163,7 +145,6 @@ $ingredientsImage = $images[1] ?? '';
         <div class="all">
             <?php 
             $step_counter = 1;
-            // Step images start at index 3
             $stepImageStartIndex = 3;
             
             foreach ($steps as $step): 
@@ -180,7 +161,8 @@ $ingredientsImage = $images[1] ?? '';
                         <p><?= nl2br(htmlspecialchars($step['description'])) ?></p>
                     </div>
                     <?php if (!empty($stepImage)): ?>
-                    <img src="<?= htmlspecialchars($stepImage) ?>" alt="Step <?= $step_counter ?>">
+                    <img src="<?= htmlspecialchars($stepImage) ?>" alt="Step <?= $step_counter ?>"
+                         onerror="this.style.display='none';">
                     <?php endif; ?>
                 </div>
             </div>
@@ -194,7 +176,9 @@ $ingredientsImage = $images[1] ?? '';
 
     <?php if (!empty($mainImage)): ?>
     <div class="enjoy">
-        <img src="<?= htmlspecialchars($mainImage) ?>" alt="<?= htmlspecialchars($recipe['name']) ?>">
+        <img src="<?= htmlspecialchars($mainImage) ?>" 
+             alt="<?= htmlspecialchars($recipe['name']) ?>"
+             onerror="this.onerror=null; this.src='<?= getCorrectImagePath('resources/default.jpg') ?>';">
         <h2>Enjoy!</h2>
     </div>
     <?php endif; ?>
@@ -211,7 +195,6 @@ $conn->close();
 // HELPER FUNCTIONS
 
 function parseIngredients($text) {
-    // Database uses asterisks (*) to separate ingredients
     $items = explode('*', $text);
     $result = [];
     
@@ -226,7 +209,6 @@ function parseIngredients($text) {
 }
 
 function parseTools($toolsText, $toolDescription = '') {
-    
     $toolNames = explode('*', $toolsText);
     $tools = [];
     
@@ -235,8 +217,7 @@ function parseTools($toolsText, $toolDescription = '') {
         if (!empty($trimmed)) {
             $tool = [
                 'name' => $trimmed,
-                'description' => $toolDescription,
-                'image' => '' 
+                'description' => $toolDescription
             ];
             $tools[] = $tool;
         }
@@ -246,17 +227,14 @@ function parseTools($toolsText, $toolDescription = '') {
 }
 
 function parseSteps($stepsText) {
-    
     $stepItems = explode('*', $stepsText);
     $steps = [];
     
     foreach ($stepItems as $stepItem) {
         $trimmed = trim($stepItem);
         if (!empty($trimmed)) {
-            
             $title = '';
             $description = $trimmed;
-            
             
             if (preg_match('/^Step\s+\d+:\s*(.+)/i', $trimmed, $matches)) {
                 $title = 'Step ' . (count($steps) + 1);
@@ -265,8 +243,7 @@ function parseSteps($stepsText) {
             
             $step = [
                 'title' => $title,
-                'description' => $description,
-                'image' => '' 
+                'description' => $description
             ];
             $steps[] = $step;
         }

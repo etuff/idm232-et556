@@ -6,32 +6,20 @@ require __DIR__ . '/partials/header.php';
 
 $conn = getDBConnection();
 
-// Function to get image
+// Function to get image WITHOUT leading slash
 function getCorrectImagePath($path) {
-    
     $path = trim($path);
     
-    
     if (empty($path)) {
-        return '';
+        return 'resources/default.jpg';
     }
-    
     
     if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
         return $path;
     }
     
-    
-    if (strpos($path, 'recipes/') === 0) {
-        return '/' . $path;
-    }
-    
-    
-    if (strpos($path, '/') !== 0) {
-        return '/' . $path;
-    }
-    
-    return $path;
+    // Remove any leading slash
+    return ltrim($path, '/');
 }
 ?>
 
@@ -49,16 +37,15 @@ function getCorrectImagePath($path) {
             while($row = $res->fetch_assoc()): 
                 
                 $images = !empty($row['images']) ? explode('*', $row['images']) : [];
-                
-                
                 $firstImage = !empty($images[0]) ? trim($images[0]) : 'resources/default.jpg';
                 $image = getCorrectImagePath($firstImage);
-                
                 
         ?>
         <div class="recipebox">
             <a href="recipe.php?id=<?= $row['id'] ?>">
-                <img src="<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
+                <img src="<?= htmlspecialchars($image) ?>" 
+                     alt="<?= htmlspecialchars($row['name']) ?>"
+                     onerror="this.onerror=null; this.src='<?= getCorrectImagePath('resources/default.jpg') ?>';">
                 <div class="recipetext">
                     <h2><?= htmlspecialchars($row['name']) ?></h2>
                     <p><?= htmlspecialchars($row['subtitle'] ?? '') ?></p>
@@ -68,10 +55,12 @@ function getCorrectImagePath($path) {
         <?php 
             endwhile;
         } else {
-           
         ?>
         <div class="no-results-container">
-            <img src="/resources/nosearch.png" alt="No recipes available" class="no-results-image">
+            <img src="<?= getCorrectImagePath('resources/nosearch.png') ?>" 
+                 alt="No recipes available" 
+                 class="no-results-image"
+                 onerror="this.onerror=null; this.src='<?= getCorrectImagePath('resources/default.jpg') ?>';">
             <p class="no-results-message">No recipes available at the moment.</p>
         </div>
         <?php
@@ -83,4 +72,5 @@ function getCorrectImagePath($path) {
     </div>
 </div>
 
-<?php require __DIR__ . '/partials/footer.php'; ?>
+<?php require __DIR__ . '/partials/footer.php'; 
+?>
