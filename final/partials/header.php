@@ -22,7 +22,6 @@
         </div>
 
         <div id="rightmenu">
-            <h2><a href="help.html">Help</a></h2>
             <form action="search.php" method="GET" class="searchbar">
                 <input type="text" name="q" placeholder="Search..." 
                        value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
@@ -56,7 +55,6 @@
     </div>
 
     <div id="rightmenu">
-        <h2><a href="help.html">Help</a></h2>
         <form action="search.php" method="GET" class="searchbar">
             <input type="text" name="q" placeholder="Search..." 
                    value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
