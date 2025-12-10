@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study</title>
+
+    <link rel="stylesheet" href="casestyles.css">
+</head>
+<body>
+
+    <header>
+        <div id="lh">
+            <img src="media/pngegg.png" alt="logo">
+            <h1>IDM 232</h1>
+        </div>
+
+
+        <!-- alpha -->
+        <h1 class="hcolor">ET556</h1>
+    </header>
+
+    <div id="casebody">
+
+    
+
+        <h1 id="title">ReCipe Online Cookbook Web Application</h1>
+
+        <img id="heroimg" src="media/heroimg.jpg" alt="hero image">
+
+        <div class="casetext">
+            <h2 class="casetitle">Overview</h2>
+            <p>
+                ReCipe is a custom-built online cookbook web application created for IDM 232 course. 
+                The goal of this project was to design and develop a responsive recipe-browsing experience 
+                powered by a MySQL database and fully coded with PHP. 
+                Over the course of the Alpha, Beta, and Final stages, I designed the interface, documented the system, 
+                and built a working platform that allows users to browse,filter search, and explore a full library of recipes.
+            </p>
+
+            <p>
+                The project tested both my HTML web development skills that i have known and PHP scripting skills which i learned during this term. 
+                At the end, I delivered a fully functioning website with templated layouts, search features that filters, and a clean visual system.
+            </p>
+
+        </div>
+
+
+        <div class="casetext">
+            <h2 class="casetitle">Context and Challenge</h2>
+            <div class="casetext">
+                <h2>Background </h2>
+                <p>
+                    The assignment required me to build a fully custom cookbook web application using only PHP, MySQL, CSS, and Git. Pre-written recipes and images 
+                    were provided, but all design decisions, branding, layout, and coding were done independently.
+                </p>
+            </div>
+
+            <div class="casetext">
+                <h2>Problem</h2>
+                <p>
+                    The original PDFs were not easy to browse or search and it were not on a central source where everyting would be acessible. 
+                    I saw this challenge as an opportunity to transform these static recipe files into a cooking website that lets users filter,
+                     explore, and read each recipe quickly.
+                </p>
+            </div>
+
+            <div class="casetext">
+                <h2>Goals</h2>
+                <ul>
+                    <li><p>Build a fully responsive cooking website from small to large screens</p></li>
+                    <li><p>Convert dozens of recipe PDFs into structured excel file and then MySQL data</p></li>
+                    <li><p>Allow users to browse, filter, and search recipes</p></li>
+                    <li><p>Deliver the project fully functional by the Final stage</p></li>
+                </ul>
+
+            </div>
+            
+
+            <div class="casetext">
+                <h2>Project Scope</h2>
+                <p>This was a solo project in a span of 10 weeks and i was responsible for;</p>
+                <ul>
+                    <li><p>Branding and interface design</p></li>
+                    <li><p>Front-end development</p></li>
+                    <li><p>PHP templating</p></li>
+                    <li><p>MySQL database structure</p></li>
+                    <li><p>Debugging and optimization</p></li>
+                </ul>
+            </div>
+
+        </div >
+
+
+        <div class="casetextb">
+            <h2 class="casetitle">Process and Insight</h2>
+
+            <div class="casetextb">
+                <h2>Research</h2>
+                <p>
+                    To understand how users browse recipes, I reviewed patterns from sites like Blue Apron, Half Baked Harvest, 
+                    and AllRecipes. I focused on: 
+                </p>
+                <ul>
+                    <li><p>Quick scanning</p></li>
+                    <li><p>Visual appeal</p></li>
+                    <li><p>Clear ingredient and instruction hierarchy</p></li>
+                </ul>
+                
+                
+            </div>
+
+
+            <div class="casetextb">
+                <h2>Alpha (HTML Web Dev)</h2>
+                <p>HTML based webpage: <a href="https://recipe-c.netlify.app/alpha/" target="_blank">Alpha HTML webpage</a> </p>
+                <p>
+                    The Alpha phase served as the foundation of the entire project. This stage focused on translating early design 
+                    decisions into a working HTML prototype. The goal was not full functionality yet, but instead a clear visual and structural 
+                    representation of the final web application.
+                </p>
+                <p>I built the initial page layouts completely in HTML and CSS and this included defining:</p>
+                <ul>
+                    <li><p>Homepage </p></li>
+                    <li><p>Responsive grid structure for the recipe cards</p></li>
+                    <li><p>The hero section with a centered search bar</p></li>
+                </ul>
+                <p>The focus was on building page templates that would later be converted into dynamic PHP pages, which is why the structure needed to be consistent, reusable, and flexible.</p>
+
+            </div>
+
+            <div class="casetextb">
+                <H2>Beta (PHP + MySQL)</H2>
+                <p>
+                    In Beta, the project shifted from static HTML to a fully dynamic site. Some things i did for the Beta include;
+                </p>
+                <ul>
+                    <li><p>Built a MySQL database to store all recipe data on my localhost</p></li>
+                    <li><p>Created reusable PHP templates</p></li>
+                    <li><p>Integrated dynamic content for grids, single recipe pages, and search</p></li>
+                    <li><p>Copied the database onto Drexel's Server and connected the website to the database using PHP</p></li>
+                </ul>
+
+                <p>The goal here was to make the entire project functional enough for submision and feedback.</p>
+
+            </div>
+
+            <div class="casetext">
+                <h2>Final</h2>
+                <p>
+                    The Final Build represents the fully realized version of the ReCipe web application. After establishing structure in 
+                    Alpha and full functionality in Beta, the Final stage focused on completing missing features, integrating all recipes, 
+                    polishing design details, and ensuring the system performed smoothly on real devices.
+                </p>
+                <h3>Full Integration of PHP & MySQL</h3>
+                <p>
+                    The PHP template system created in Beta was fully completed. Every major page pulled live data directly from the MySQL database.
+                    Key improvements included;
+                </p>
+                <ul>
+                    <li><p>Ensuring all recipe cards populate their images, names, and descriptions.</p></li>
+                    <li><p>Finalizing logic so all pages respond correctly to various search and filter inputs</p></li>
+                    <li><p>Reducing repeated code by consolidating functions and templates.</p></li>
+                </ul>
+                
+            </div>
+
+
+            
+        </div>
+
+
+        <div class="casetext">
+            <h2 class="casetitle">The Solution</h2>
+            <p>
+                The final solution is a fully responsive online cookbook web application that transforms a large collection of 
+                static recipe PDFs into an easy-to-browse digital experience. The solution brings together the structure defined 
+                in Alpha, the functionality built in Beta, and the polish added in the Final build to create a functional and branded cooking platform.
+            </p>
+
+            <h4>Here are the core features</h4>
+            <div class="grid-list">
+                <div class="ingrid">
+                    <p>Hero section and recipe grid on Hompage</p>
+                    <ul>
+                        <li><p>A large, clean brand title (“ReCipe”) and a centered Search Bar</p></li>
+                        <li><p>Minimal distractions and clear visual hierarchy</p></li>
+                        <li><p>A responsive grid showcases a curated selection of recipes</p></li>
+                        <li><p>Recipe cards clickable to the detailed recipe page</p></li>
+                    </ul>
+                
+                </div>
+
+                <div class="ingrid">
+                    <p>Search & Filtering System</p>
+                    <ul>
+                        <li><p>A centered Search Bar and top-right search input accessible from any page.</p></li>
+                        <li><p>Search results pages populated dynamically through PHP and MySQL</p></li>
+                        <li><p>Search results filters Recipe name and recipe subtitle </p></li>
+                        <li><p>A “No Results” screen with clear messaging when search doesn't match any recipe title or subtitle in the database.</p></li>
+                    </ul>
+                    
+                </div>
+
+                <div class="ingrid">
+                    <p>Recipe Detailed Pages</p>
+                    <ul>
+                        <li><p>Shows the finished dish clearly and largely.</p></li>
+                        <li><p>Provides immediate context on title and description before diving into the steps.</p></li>
+                        <li><p>Ingredients displayed in a clean, scannable list with consistent formatting.</p></li>
+                        <li><p>Step-by-step instructions</p></li>
+
+                    </ul>
+                </div>
+
+                <div class="ingrid">
+                    <p>PHP & MySQL Functionality <br>
+                    
+                    <ul>
+                        <li><p>The homepage recipe cards are generated from the database</p></li>
+                        <li><p>Each recipe page loads the correct ingredients and steps automatically</p></li>
+                        <li><p>The search system retrieves matching results in real time</p></li>
+                        <li><p>Database structure supports all recipes with room for future additions</p></li>
+                    </ul>
+                </div>
+
+                
+            </div>
+            
+
+            <div class="casetext">
+                <p>Here is a screen capture video of the live webpage</p>
+                <video controls>
+                <source src="media/recipe.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+
+
+            <div class="caselink">
+            <p>
+                You can visit the webpage here
+            </p>
+            
+            <button><a href="https://idm241-et556.netlify.app/final/build/" target="_blank">
+                ReCipe Cookbook</a></button>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="casetext">
+            <h2 class="casetitle">Results</h2>
+            <p>
+                The final ReCipe web application turned out to be a successful and complete cooking platform 
+                that met all the project goals. The biggest improvement was how the site transformed the original PDF recipes 
+                into an easy-to-use, searchable experience. Instead of clicking through separate files, users can now 
+                browse, search, and open recipes quickly through a clean and organized interface.
+            </p>
+
+           <p>
+            If I could change anything with the process on this project, I would certainly start the tasks earlier, such as the search system and the database setup, 
+            to avoid feeling rushed near the end. I would also spend more time with the structuring of the database. 
+            However, these experiences helped strengthen my process, and the final product shows real growth in both my understanding and coding skills.
+           </p>
+            
+        </div>
+
+    
+
+
+    
+
+
+    </div>
+
+
+    <footer>
+        <p>Enoch Tuffour</p>
+        <p>&copy; 2025</p>
+    </footer>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+    <script src="../beta/build/js.js"></script>
+</body>
+</html>
