@@ -240,7 +240,7 @@
     width: 100%;
   }
 
-  .casetext {
+  .casetext, .casetextb {
     padding: 20px 60px;
   }
 }
@@ -256,7 +256,7 @@
     padding: 0 30px;
   }
 
-  .casetext {
+  .casetext, .casetextb {
     padding: 20px 40px;
   }
 
@@ -285,7 +285,7 @@
     width: 100%;
   }
 
-  #casebody .casetext {
+  #casebody .casetext, #casebody .casetextb {
     padding: 10px 10px;
   }
 
@@ -322,12 +322,16 @@
     width: 100%;
   }
 
-  .casetext {
+  .casetext, .casetextb {
     padding: 10px 10px;
   }
 
   
   #casebody .casetext .grid-list {
+    grid-template-columns: 1fr;
+  }
+
+  #casebody .casetextb .grid-list {
     grid-template-columns: 1fr;
   }
 
