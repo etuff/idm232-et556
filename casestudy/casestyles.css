@@ -261,7 +261,7 @@
     padding: 0 30px;
   }
 
-  .casetext, .casetextb {
+  #casebody .casetext, #casebody .casetextb {
     padding: 20px 40px;
   }
 
